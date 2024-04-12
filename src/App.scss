@@ -1,0 +1,22 @@
+
+
+.overflow-text {
+    width: 250px; /* Chiều rộng của phần tử chứa */
+    white-space: nowrap; /* Ngăn văn bản xuống dòng */
+    overflow: hidden; /* Ẩn phần văn bản tràn ra khỏi khung */
+    text-overflow: ellipsis; /* Thêm dấu ba chấm (...) cho văn bản tràn ra */
+}
+
+.container-orange {
+    color: orange;
+}
+
+
+
+@media all and (max-width: 1024px) {
+    .login-container {
+        input {
+            color: orange !important;
+        }
+    }
+}
