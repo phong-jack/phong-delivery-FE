@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const ShopCard = (props) => {
-  const { name, address, imageUrl, isWorking } = props;
+  const { id, name, address, imageUrl, isWorking } = props;
   return (
     <>
       {/* <div className="col-lg-3 mb-4 col-6">
@@ -15,18 +16,17 @@ const ShopCard = (props) => {
         </div>
       </div> */}
       {
-        (
-          <div className="col-lg-3 mb-4 col-6">
-            <div className="card">
-              <img src={imageUrl} alt="" className="card-img-top" />
-              <div className="card-body">
-                <h5 className="card-title overflow-text">{name}</h5>
-                <p className="card-subtitle my-2 overflow-text">{address}</p>
-                <a href="/" className="btn " style={{ backgroundColor: '#EE4D' }}>Xem thêm</a>
-              </div>
-            </div>
+        <div className="card">
+          <img src={imageUrl} alt="" className="card-img-top" />
+          <div className="card-body">
+            <h5 className="card-title overflow-text">{name}</h5>
+            <p className="card-subtitle my-2 overflow-text">{address}</p>
+            <Link to={`/shop/${id}`} className="btn custom-yellow">
+              Xem thêm
+            </Link>
           </div>
-        )}
+        </div>
+      }
     </>
   );
 };

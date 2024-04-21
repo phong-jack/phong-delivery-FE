@@ -1,22 +1,72 @@
-
-
 .overflow-text {
-    width: 250px; /* Chiều rộng của phần tử chứa */
-    white-space: nowrap; /* Ngăn văn bản xuống dòng */
-    overflow: hidden; /* Ẩn phần văn bản tràn ra khỏi khung */
-    text-overflow: ellipsis; /* Thêm dấu ba chấm (...) cho văn bản tràn ra */
+  width: 250px; /* Chiều rộng của phần tử chứa */
+  white-space: nowrap; /* Ngăn văn bản xuống dòng */
+  overflow: hidden; /* Ẩn phần văn bản tràn ra khỏi khung */
+  text-overflow: ellipsis; /* Thêm dấu ba chấm (...) cho văn bản tràn ra */
 }
 
 .container-orange {
-    color: orange;
+  color: orange;
 }
 
+.custom-yellow {
+  background-color: #ee4d !important;
+}
 
+.custom-yellow:hover {
+  background-color: #fcc419 !important;
+}
 
-@media all and (max-width: 1024px) {
-    .login-container {
-        input {
-            color: orange !important;
-        }
-    }
+.login-container {
+  input {
+  }
+}
+
+.shop-info {
+  line-height: 0.8;
+}
+
+.shop-content-image img {
+  border: 3px solid #ee4d;
+  border-radius: 30px;
+}
+
+//Mobile
+@media all and (max-width: 767px) {
+  .shop-content-image img {
+    width: 340px;
+    height: 200px;
+  }
+}
+
+.category div > div {
+  border: 0.25rem solid #ee4d;
+  background-color: #ee4d;
+  border-radius: 10px;
+}
+
+.shop-product-containter span {
+  color: #e67700;
+}
+
+.shop-product-containter .category {
+  background-color: rgb(242, 244, 244);
+  border-radius: 3px;
+  margin-right: 2rem;
+}
+
+.order-food-icon:hover {
+  cursor: pointer;
+}
+
+//Tablet
+@media all and (min-width: 768px) and (max-width: 1024px) {
+}
+
+@media all and (min-width: 1024px) {
+  .shop-content-image img {
+    margin-left: 40px;
+    width: 500px; /* Tăng width lên một chút */
+    height: 312px; /* Đảm bảo tỷ lệ cân đối */
+  }
 }
