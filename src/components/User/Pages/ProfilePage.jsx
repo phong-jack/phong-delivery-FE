@@ -5,6 +5,7 @@ import ErrorPage from "./ErrorPage";
 import { axiosClient, createAxios } from "../../../api/axiosConfig";
 import { loginSuccess, logoutSuccess } from "../../../redux/authSlice";
 import { toast } from "react-toastify";
+import ChangePasswordModal from "../ChangePasswordModal";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const ProfilePage = () => {
   const [avatar, setAvatar] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [isShowModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -60,16 +62,30 @@ const ProfilePage = () => {
       const res = await axiosJWT.post("/user/update", {
         id: user.id,
         fullName,
+        email,
         image: avatar,
         phone,
         address,
       });
-      console.log(res);
-      dispatch(loginSuccess({ ...user, fullName: fullName }));
+      // const newUser = {
+      //   id: user.id,
+      //   fullName,
+      //   image: avatar,
+      //   phone,
+      //   address,
+      // };
+      const newUser = res.data.metadata;
+
+      console.log("Check new user", newUser);
+      dispatch(loginSuccess({ ...user, ...newUser }));
       toast.success("Thay đổi thông tin thành công!");
     } catch (error) {
       toast.error(error.message);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -134,7 +150,14 @@ const ProfilePage = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
-                    {(user.isActive && "") || (
+                    {(user.isActive && (
+                      <>
+                        <span>
+                          Mail đã được xác thực{" "}
+                          <i class="fa-solid fa-check"></i>
+                        </span>
+                      </>
+                    )) || (
                       <div className="row gx-3 mt-2">
                         <div className=" col-6">
                           <p className="badge bg-danger">
@@ -176,19 +199,34 @@ const ProfilePage = () => {
                       />
                     </div>
                   </div>
-                  <button
-                    class="btn btn-warning"
-                    type="button"
-                    onClick={() => handleUpdateProfile()}
-                  >
-                    Lưu thay đổi
-                  </button>
+                  <div className="d-flex justify-content-start">
+                    <button
+                      class="btn btn-warning"
+                      type="button"
+                      onClick={() => handleUpdateProfile()}
+                    >
+                      Lưu thay đổi
+                    </button>
+                  </div>
+                  <div className="d-flex justify-content-end">
+                    <button
+                      class="btn btn-primary d-flex justify-content-end"
+                      type="button"
+                      onClick={() => setShowModal(true)}
+                    >
+                      Đổi mật khẩu
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <ChangePasswordModal
+        isShowModal={isShowModal}
+        handleCloseModal={handleCloseModal}
+      />
     </>
   );
 };

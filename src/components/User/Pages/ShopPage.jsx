@@ -129,16 +129,18 @@ const ShopPage = () => {
                         <p className="h4 text-uppercase">{menuItem.name}</p>
                         {foodDrinkList?.map((foodDrink) => {
                           if (menuItem.id === foodDrink.categoryId) {
-                            return (
-                              <FoodCard
-                                key={foodDrink.id}
-                                shopDetail={shopDetail}
-                                id={foodDrink.id}
-                                name={foodDrink.name}
-                                price={foodDrink.price}
-                                imageUrl={foodDrink.image}
-                              />
-                            );
+                            if (foodDrink.isAvailable) {
+                              return (
+                                <FoodCard
+                                  key={foodDrink.id}
+                                  shopDetail={shopDetail}
+                                  id={foodDrink.id}
+                                  name={foodDrink.name}
+                                  price={foodDrink.price}
+                                  imageUrl={foodDrink.image}
+                                />
+                              );
+                            }
                           }
                           return null;
                         })}

@@ -30,6 +30,9 @@ const Login = (props) => {
       if (userInfo) {
         handleClose();
         toast.success("Đăng nhập thành công!");
+        if (userInfo.isShop) {
+          navigate("/admin/order");
+        }
       } else {
         toast.error("Sai tài khoản hoặc mật khẩu!");
       }

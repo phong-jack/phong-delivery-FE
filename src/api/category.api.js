@@ -8,3 +8,12 @@ export const getCategoryByShop = async (shopId) => {
     console.log(error);
   }
 };
+
+export const getAllCategory = async () => {
+  try {
+    const res = await axiosClient.get("/category");
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

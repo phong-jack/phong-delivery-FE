@@ -20,13 +20,21 @@ import {
 } from "../services/order.service";
 import { Link } from "react-router-dom";
 import { getVietNamDongFormat } from "../utils/func.ulti";
+import { createAxios } from "../api/axiosConfig";
+import { loginSuccess } from "../redux/authSlice";
+import { toast } from "react-toastify";
 
 const OrderSection = () => {
   let order = useSelector((state) => state.order.currentOrder);
+  let user = useSelector((state) => state.auth.login.currentUser);
 
   const dispatch = useDispatch();
+  const axiosJWT = createAxios(user, dispatch, loginSuccess());
   const [orderDetails, setOrderDetails] = useState([]);
   const [total, setTotal] = useState();
+  const [address, setAddress] = useState(user?.address);
+  const [note, setNote] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState();
 
   useEffect(() => {
     if (orderDetails) {
@@ -36,8 +44,6 @@ const OrderSection = () => {
 
   const getCartData = async (order) => {
     if (!order || !Array.isArray(order.orderDetails)) {
-      // Kiểm tra nếu order hoặc orderDetails không có sẵn hoặc không phải là một mảng
-      // Thực hiện các xử lý hoặc trả về một giá trị mặc định nếu cần thiết
       return;
     }
     const newOrderDetails = await Promise.all(
@@ -97,6 +103,33 @@ const OrderSection = () => {
     };
     updateOrderDetail(newOrder, dispatch);
     getCartData(newOrder);
+  };
+
+  const handleCreateOrder = async () => {
+    if (!order) {
+      toast.warning("Đơn hàng trống");
+      return;
+    }
+    if (!address) {
+      toast.warning("Nhập vào địa chỉ");
+      return;
+    }
+    const orderDto = {
+      shopId: order.shopId,
+      address,
+      note,
+      orderDetails: order.orderDetails,
+    };
+    const res = await axiosJWT.post("/order/createNewOrder", orderDto);
+    if (res.data && res.data.metadata) {
+      toast.success("Đặt hàng thành công!");
+      removeOrderDetail(dispatch);
+      setOrderDetails(null);
+      setTotal(0);
+      setNote("");
+    } else {
+      toast.error("Có lỗi xảy ra");
+    }
   };
 
   return (
@@ -250,6 +283,8 @@ const OrderSection = () => {
                         <MDBInput
                           size="lg"
                           label="Nhập vào địa chỉ muốn giao hàng"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
                         />
                       </div>
 
@@ -263,6 +298,7 @@ const OrderSection = () => {
                           id=""
                           cols="30"
                           rows="5"
+                          onChange={(e) => setNote(e.target.value)}
                         ></textarea>
                       </div>
 
@@ -277,8 +313,12 @@ const OrderSection = () => {
                         </MDBTypography>
                       </div>
 
-                      <button type="button" class="btn btn-warning btn-lg">
-                        Thanh toán
+                      <button
+                        type="button"
+                        class="btn btn-warning btn-lg"
+                        onClick={() => handleCreateOrder()}
+                      >
+                        Đặt hàng
                       </button>
                     </div>
                   </MDBCol>
