@@ -1,83 +1,78 @@
-import React from "react";
+import { BarChart } from "@mui/x-charts";
+import { MonthsInYearArray } from "../../../constant";
+import { useDispatch, useSelector } from "react-redux";
+import { createAxios } from "../../../api/axiosConfig";
+import { loginSuccess } from "../../../redux/authSlice";
+import { useEffect, useState } from "react";
+
+const getYears = (yearNow) => {
+  const years = [];
+  for (let i = yearNow; i >= yearNow - 3; i--) {
+    years.push(i);
+  }
+  return years;
+};
 
 const DashboardPage = () => {
+  const yearNow = new Date().getFullYear();
+  const years = getYears(yearNow);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.login.currentUser);
+  const [yearSelected, setYearSelected] = useState(yearNow);
+  const [yearData, setYearData] = useState();
+  const [seriesData, setSeriesData] = useState();
+
+  const axiosJWT = createAxios(user, dispatch, loginSuccess);
+
+  useEffect(() => {
+    statisticsByYear(yearNow);
+  }, []);
+
+  const statisticsByYear = async (year) => {
+    const barChartData = Array.from({ length: 12 }, () => 0);
+    try {
+      const res = await axiosJWT.get("/order/statisticsByYear/" + year);
+      if (res.data && res.data.metadata) {
+        setYearData(res.data.metadata);
+        yearData.forEach((item) => {
+          const monthIndex = item.order_month - 1;
+          barChartData[monthIndex] = item.total_orders;
+        });
+        setSeriesData([{ data: barChartData }]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChangeYear = async (year) => {
+    statisticsByYear(year);
+  };
+
   return (
     <>
-      <div id="my-chart">
-        <table class="charts-css column show-labels show-primary-axis">
-          <caption className="h3">Doanh thu tháng 4 - 2024</caption>
-          <thead>
-            <tr>
-              <th scope="col"> Year </th>
-              <th scope="col"> Progress </th>
-              <th scope="col"> Progress </th>
-              <th scope="col"> Progress </th>
-              <th scope="col"> Progress </th>
-              <th scope="col"> Progress </th>
-              <th scope="col"> Progress </th>
-              <th scope="col"> Progress </th>
-              <th scope="col"> Progress </th>
-              <th scope="col"> Progress </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"> 2016 </th>
-              <td style={{ "--size": "1.0" }}>
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <ul class="charts-css legend"></ul>
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        onChange={(e) => handleChangeYear(e.target.value)}
+      >
+        {years &&
+          years.map((year) => {
+            return (
+              <>
+                <option value={year}>{year}</option>
+              </>
+            );
+          })}
+      </select>
+
+      <div style={{ minHeight: "1000px" }}>
+        <BarChart
+          series={seriesData}
+          height={290}
+          xAxis={[{ data: MonthsInYearArray, scaleType: "band" }]}
+          margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+        />
       </div>
     </>
   );

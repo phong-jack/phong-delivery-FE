@@ -17,20 +17,29 @@ import ProductPage from "./components/Admin/pages/ProductPage";
 import { useSelector } from "react-redux";
 import HeaderAdmin from "./components/Admin/HeaderAdmin";
 import OrderDetailPage from "./components/Admin/pages/OrderDetailPage";
+import RegisterModal from "./components/RegisterModal";
+import SearchBox from "./components/User/Pages/SearchPage";
+import SearchPage from "./components/User/Pages/SearchPage";
+import SuccessPay from "./components/User/Pages/SuccessPay";
 
 function App() {
   const [isShowLoginModal, setShowLoginModal] = useState(false);
+  const [isShowRegisterModal, setShowRegisterModal] = useState(false);
   const user = useSelector((state) => state.auth?.login.currentUser);
 
   //Modal handle
   const handleClose = () => {
     setShowLoginModal(false);
+    setShowRegisterModal(false);
   };
 
   return (
     <>
       {(user && user.isShop && <HeaderAdmin />) || (
-        <Header setShowLoginModal={setShowLoginModal} />
+        <Header
+          setShowLoginModal={setShowLoginModal}
+          setShowRegisterModal={setShowRegisterModal}
+        />
       )}
 
       <Container>
@@ -41,6 +50,8 @@ function App() {
           <Route path="/order-card" element={<OrderPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/order-history" element={<OrderHistoryPage />} />
+          <Route path="/search" element={<SearchBox />} />
+          <Route path="/success" element={<SuccessPay />} />
 
           {/* Page for SHOP */}
           <Route path="/admin/dashboard" element={<DashboardPage />} />
@@ -55,6 +66,10 @@ function App() {
       </Container>
       <LoginModal
         isShowLoginModal={isShowLoginModal}
+        handleClose={handleClose}
+      />
+      <RegisterModal
+        isShowRegisterModal={isShowRegisterModal}
         handleClose={handleClose}
       />
       <ToastContainer

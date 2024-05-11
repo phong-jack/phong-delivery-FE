@@ -33,8 +33,8 @@ const ShopCards = () => {
   return (
     <>
       <section id="shops-container" className="mt-5 ">
-        <div className="container ">
-          <div className="row">
+        <div className="container">
+          <div className="row" style={{ minHeight: "1000px" }}>
             {listShop &&
               listShop.map((shop) => {
                 return (

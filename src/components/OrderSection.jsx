@@ -18,7 +18,7 @@ import {
   removeOrderDetail,
   updateOrderDetail,
 } from "../services/order.service";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getVietNamDongFormat } from "../utils/func.ulti";
 import { createAxios } from "../api/axiosConfig";
 import { loginSuccess } from "../redux/authSlice";
@@ -28,13 +28,14 @@ const OrderSection = () => {
   let order = useSelector((state) => state.order.currentOrder);
   let user = useSelector((state) => state.auth.login.currentUser);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const axiosJWT = createAxios(user, dispatch, loginSuccess());
   const [orderDetails, setOrderDetails] = useState([]);
   const [total, setTotal] = useState();
   const [address, setAddress] = useState(user?.address);
   const [note, setNote] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState();
+  const [paymentMethod, setPaymentMethod] = useState("COD");
 
   useEffect(() => {
     if (orderDetails) {
@@ -114,11 +115,17 @@ const OrderSection = () => {
       toast.warning("Nhập vào địa chỉ");
       return;
     }
+    if (paymentMethod === "ONLINE") {
+      handlePaymentOnline();
+      return;
+    }
+
     const orderDto = {
       shopId: order.shopId,
       address,
       note,
       orderDetails: order.orderDetails,
+      paymentMethod: paymentMethod,
     };
     const res = await axiosJWT.post("/order/createNewOrder", orderDto);
     if (res.data && res.data.metadata) {
@@ -130,6 +137,31 @@ const OrderSection = () => {
     } else {
       toast.error("Có lỗi xảy ra");
     }
+  };
+
+  const handlePaymentOnline = async () => {
+    const products = orderDetails.map((orderDetail) => {
+      return {
+        name: orderDetail.name,
+        image: orderDetail.image,
+        price: orderDetail.price,
+        quantity: orderDetail.quantity,
+      };
+    });
+    const res = await axiosJWT.post("/payment/createCheckoutSession", {
+      products,
+    });
+    const metadata = res.data;
+
+    window.location.href = metadata.url;
+    const newOrder = {
+      shopId: order.shopId,
+      orderDetails: order.orderDetails,
+      note: note,
+      address: address,
+    };
+    updateOrderDetail(newOrder, dispatch);
+    dispatch(updateOrderDetail());
   };
 
   return (
@@ -269,9 +301,10 @@ const OrderSection = () => {
                         <select
                           className="select p-2 rounded bg-grey"
                           style={{ width: "100%" }}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
                         >
-                          <option value="1">COD</option>
-                          <option value="2">CHUYỂN KHOẢN (VNPAY)</option>
+                          <option value="COD">COD</option>
+                          <option value="ONLINE">CHUYỂN KHOẢN (ONLINE)</option>
                         </select>
                       </div>
 

@@ -12,4 +12,19 @@ const ORDER_STATUS = {
 const MAPBOX_API_KEY =
   "pk.eyJ1IjoibmdvdGllbnBob25nMDUzIiwiYSI6ImNsdmR1aWYxMjAydG0ybG1vaWU2NHA5azYifQ.HFF4Ao-EqPB8GhA9zBM1Zg";
 
-export { BACKEND_URL, ORDER_STATUS, MAPBOX_API_KEY };
+const MonthsInYearArray = [
+  "Tháng 1",
+  "Tháng 2",
+  "Tháng 3",
+  "Tháng 4",
+  "Tháng 5",
+  "Tháng 6",
+  "Tháng 7",
+  "Tháng 8",
+  "Tháng 9",
+  "Tháng 10",
+  "Tháng 11",
+  "Tháng 12",
+];
+
+export { BACKEND_URL, ORDER_STATUS, MAPBOX_API_KEY, MonthsInYearArray };

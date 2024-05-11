@@ -26,3 +26,12 @@ export const getShopDetail = async (id) => {
     console.log(error);
   }
 };
+
+export const findShopByQuery = async (query, page) => {
+  try {
+    const res = await axiosClient.get(`/shop/find?q=${query}&page=${page}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

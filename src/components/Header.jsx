@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { removeOrderDetail } from "../services/order.service";
 
 const Header = (props) => {
-  const { setShowLoginModal } = props;
+  const { setShowLoginModal, setShowRegisterModal } = props;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,6 +24,14 @@ const Header = (props) => {
   //click login event
   const handleFormLogin = () => {
     setShowLoginModal(true);
+  };
+
+  const handleFormRegister = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleClickSearch = () => {
+    navigate("/search");
   };
 
   const handleLogout = () => {
@@ -57,6 +65,10 @@ const Header = (props) => {
               </Link>
             </Nav>
             <Nav className="align-items-center">
+              <div className="btn" onClick={() => handleClickSearch()}>
+                {" "}
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </div>
               {(user && (
                 <>
                   <Link to="/order-card">
@@ -98,12 +110,21 @@ const Header = (props) => {
                   </NavDropdown>
                 </>
               )) || (
-                <button
-                  className="btn btn-warning btn-rounded"
-                  onClick={handleFormLogin}
-                >
-                  Đăng nhập
-                </button>
+                <>
+                  <button
+                    className="btn btn-warning btn-rounded mx-2"
+                    onClick={handleFormLogin}
+                  >
+                    Đăng nhập
+                  </button>
+
+                  <button
+                    className="btn btn-warning btn-rounded"
+                    onClick={handleFormRegister}
+                  >
+                    Đăng ký
+                  </button>
+                </>
               )}
             </Nav>
           </Navbar.Collapse>
