@@ -79,6 +79,13 @@ const ModalAddNewProduct = (props) => {
     }
   };
 
+  const handlePriceChange = (e) => {
+    const inputPrice = e.target.value;
+    if (/^\d*$/.test(inputPrice)) {
+      setPrice(inputPrice);
+    }
+  };
+
   return (
     <>
       <Modal show={show} onHide={handleCloseModal} backdrop="static">
@@ -122,7 +129,7 @@ const ModalAddNewProduct = (props) => {
                     required
                     type="text"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={handlePriceChange}
                   />
                 </div>
                 <div className="form-group mb-2">

@@ -154,7 +154,7 @@ const Register = (props) => {
           onClick={(e) => handleRegister(e)}
         >
           {loadingApi && <i className="fa-solid fa-spinner fa-spin"></i>}
-          &nbsp;Đăng nhập
+          &nbsp;Đăng ký
         </button>
       </div>
     </>

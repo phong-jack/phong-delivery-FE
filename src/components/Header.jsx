@@ -34,8 +34,13 @@ const Header = (props) => {
     navigate("/search");
   };
 
-  const handleLogout = () => {
-    const logoutResult = logOut(dispatch, navigate, accessToken, axiosJWT);
+  const handleLogout = async () => {
+    const logoutResult = await logOut(
+      dispatch,
+      navigate,
+      accessToken,
+      axiosJWT
+    );
     removeOrderDetail(dispatch);
     if (logoutResult) {
       toast.success("Đăng xuất thành công!");

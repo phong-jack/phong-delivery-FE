@@ -3,13 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { createAxios } from "../../api/axiosConfig";
 import { logoutSuccess } from "../../redux/authSlice";
 import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/phong-delivery.png";
 import ErrorPage from "../User/Pages/ErrorPage";
+import { logOut } from "../../services/auth.service";
+import { toast } from "react-toastify";
+import { removeOrderDetail } from "../../services/order.service";
 
 const HeaderAdmin = () => {
   const user = useSelector((state) => state.auth.login.currentUser);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  let axiosJWT = createAxios(user, dispatch, logoutSuccess);
+  const accessToken = user?.tokens.accessToken;
 
   if (!user.isShop) {
     return (
@@ -19,7 +25,20 @@ const HeaderAdmin = () => {
     );
   }
 
-  let axiosJWT = createAxios(user, dispatch, logoutSuccess);
+  const handleLogout = async () => {
+    const logoutResult = await logOut(
+      dispatch,
+      navigate,
+      accessToken,
+      axiosJWT
+    );
+    removeOrderDetail(dispatch);
+    if (logoutResult) {
+      toast.success("Đăng xuất thành công!");
+    } else {
+      toast.error("Đăng xuất thất bại!");
+    }
+  };
 
   return (
     <>

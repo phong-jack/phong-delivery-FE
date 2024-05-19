@@ -26,6 +26,7 @@ const ProfilePage = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [isShowModal, setShowModal] = useState(false);
+  const [isActive, setIsActive] = useState();
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -36,6 +37,7 @@ const ProfilePage = () => {
       setAvatar(userData.image);
       setPhone(userData.phone);
       setAddress(userData.address);
+      setIsActive(userData.isActive);
     };
     getUserInfo();
   }, []);
@@ -67,20 +69,21 @@ const ProfilePage = () => {
         phone,
         address,
       });
-      // const newUser = {
-      //   id: user.id,
-      //   fullName,
-      //   image: avatar,
-      //   phone,
-      //   address,
-      // };
+
       const newUser = res.data.metadata;
 
-      console.log("Check new user", newUser);
       dispatch(loginSuccess({ ...user, ...newUser }));
       toast.success("Thay đổi thông tin thành công!");
     } catch (error) {
       toast.error(error.message);
+    }
+  };
+
+  const handleSendVerifyRequest = async () => {
+    const res = await axiosJWT.post("sendVerifyRequest", { email: email });
+    if (res.data && res.data.metadata) {
+      toast.success("Gửi mail xác thực thành công, Kiểm tra mail");
+      console.log(res.data.metadata);
     }
   };
 
@@ -150,7 +153,7 @@ const ProfilePage = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
-                    {(user.isActive && (
+                    {(isActive && (
                       <>
                         <span>
                           Mail đã được xác thực{" "}
@@ -165,7 +168,12 @@ const ProfilePage = () => {
                           </p>
                         </div>
                         <div className="col-6 text-end">
-                          <button className="btn btn-primary">Xác thực</button>
+                          <span
+                            className="btn btn-primary"
+                            onClick={() => handleSendVerifyRequest()}
+                          >
+                            Xác thực
+                          </span>
                         </div>
                       </div>
                     )}

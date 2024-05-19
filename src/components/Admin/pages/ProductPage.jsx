@@ -81,7 +81,7 @@ const ProductPage = () => {
 
   return (
     <>
-      <div className="my-3 add-new " style={{ height: "1000px" }}>
+      <div className="my-3 add-new " style={{ minHeight: "1000px" }}>
         <div className="mb-3 d-flex justify-content-between">
           <span>
             <b className="h3">Danh sách món</b>
@@ -94,79 +94,88 @@ const ProductPage = () => {
           </button>
         </div>
         <div>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th className="d-flex justify-content-between">ID</th>
-                <th>Ảnh</th>
-                <th>Tên món</th>
-                <th>Giới thiệu</th>
-                <th>Giá tiền</th>
-                <th>Hành động</th>
-                <th style={{ width: "10%" }}>Trạng thái</th>
-              </tr>
-            </thead>
-            <tbody>
-              {listProduct &&
-                listProduct?.map((product) => {
-                  return (
-                    <>
-                      <tr>
-                        <td>{product.id}</td>
-                        <td>
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            style={{ width: "50px", height: "50px" }}
-                          />{" "}
-                          {/* Ảnh nhỏ */}
-                        </td>
-                        <td> {product.name}</td>
-                        <td>{product.description}</td>
-                        <td>{getVietNamDongFormat(product.price)}</td>
-                        <td>
-                          <button
-                            className="btn btn-warning mx-3"
-                            onClick={() => handleOpenModalEdit(product.id)}
-                          >
-                            Sửa
-                          </button>
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => {
-                              setShowConfirmModal(true);
-                              setSelectedProductId(product.id);
-                            }}
-                          >
-                            Xóa
-                          </button>
-                        </td>
-                        <td>
-                          <div
-                            class="form-check form-switch"
-                            style={{ fontSize: "2rem" }}
-                          >
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              role="switch"
-                              checked={product.isAvailable}
-                              onChange={() =>
-                                handleToggleProductStatus(product.id)
-                              }
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexSwitchCheckDefault"
-                            ></label>
-                          </div>
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
-            </tbody>
-          </Table>
+          <div style={{ minHeight: "1000px" }}>
+            {" "}
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th
+                    className="d-flex justify-content-between"
+                    style={{ width: "10%" }}
+                  >
+                    ID
+                  </th>
+                  <th style={{ width: "10%" }}>Ảnh</th>
+                  <th>Tên món</th>
+                  <th>Giới thiệu</th>
+                  <th style={{ width: "10%" }}>Giá tiền</th>
+                  <th style={{ width: "15%" }}>Hành động</th>
+                  <th style={{ width: "10%" }}>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                {listProduct &&
+                  listProduct?.map((product) => {
+                    return (
+                      <>
+                        <tr>
+                          <td>{product.id}</td>
+                          <td>
+                            <img
+                              src={product.image}
+                              alt={product.name}
+                              style={{ width: "50px", height: "50px" }}
+                            />{" "}
+                            {/* Ảnh nhỏ */}
+                          </td>
+                          <td> {product.name}</td>
+                          <td>{product.description}</td>
+                          <td>{getVietNamDongFormat(product.price)}</td>
+                          <td>
+                            <button
+                              className="btn btn-warning mx-3"
+                              onClick={() => handleOpenModalEdit(product.id)}
+                            >
+                              Sửa
+                            </button>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => {
+                                setShowConfirmModal(true);
+                                setSelectedProductId(product.id);
+                              }}
+                            >
+                              Xóa
+                            </button>
+                          </td>
+                          <td>
+                            <div
+                              class="form-check form-switch"
+                              style={{ fontSize: "2rem" }}
+                            >
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                checked={product.isAvailable}
+                                onChange={() =>
+                                  handleToggleProductStatus(product.id)
+                                }
+                              />
+                              <label
+                                class="form-check-label"
+                                for="flexSwitchCheckDefault"
+                              ></label>
+                            </div>
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  })}
+              </tbody>
+            </Table>
+          </div>
+
           <ReactPaginate
             breakLabel="..."
             nextLabel="next >"

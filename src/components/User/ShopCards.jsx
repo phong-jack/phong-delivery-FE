@@ -52,11 +52,11 @@ const ShopCards = () => {
           </div>
           <ReactPaginate
             breakLabel="..."
-            nextLabel="next >"
+            nextLabel="Tiếp >"
             onPageChange={handlePageClick}
             pageRangeDisplayed={5}
             pageCount={totalPages}
-            previousLabel="< previous"
+            previousLabel="< Trước"
             pageClassName="pag`e-item"
             pageLinkClassName="page-link"
             previousClassName="page-item"

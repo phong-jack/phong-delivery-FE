@@ -18,12 +18,15 @@ const ShopOrderDetailModal = (props) => {
   const axiostJWT = createAxios(user, dispatch, loginSuccess);
   const [listProduct, setListProduct] = useState();
   const [orderDetail, setOrderDetail] = useState();
+  const [orderUser, setOrderUser] = useState();
 
   const getFoodDrinksByOrderId = async (orderId) => {
     const res = await axiostJWT.get("/order/detail/" + orderId);
     if (res.data && res.data.metadata) {
       setOrderDetail(res.data.metadata);
       setListProduct(res.data.metadata.foodDrinks);
+      const userId = res.data.metadata?.userId;
+      getOrderUserInfo(userId);
     }
   };
   useEffect(() => {
@@ -81,6 +84,17 @@ const ShopOrderDetailModal = (props) => {
     }
   };
 
+  const getOrderUserInfo = async (userId) => {
+    try {
+      const res = await axiostJWT.get("/user/" + userId);
+      if (res.data && res.data.metadata) {
+        setOrderUser(res.data.metadata);
+      }
+    } catch (error) {
+      console.error(error.response.data.message);
+    }
+  };
+
   return (
     <>
       <Modal
@@ -96,6 +110,29 @@ const ShopOrderDetailModal = (props) => {
         </Modal.Header>
         <Modal.Body>
           <>
+            {orderUser && (
+              <figure class="fir-image-figure">
+                <span class="fir-imageover" rel="noopener" target="_blank">
+                  <img
+                    class="fir-author-image fir-clickcircle"
+                    src={orderUser.image}
+                    alt="David East - Author"
+                    width="50px"
+                    height="50px"
+                  />
+                  <div class="fir-imageover-color"></div>
+                </span>
+
+                <figcaption>
+                  <div class="fig-author-figure-title">
+                    {orderUser.fullName}
+                  </div>
+                  <div class="fig-author-figure-title">
+                    Số diện thoại : {orderUser.phone}
+                  </div>
+                </figcaption>
+              </figure>
+            )}
             {listProduct &&
               listProduct?.map((product) => {
                 return (

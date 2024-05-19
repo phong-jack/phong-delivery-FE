@@ -85,58 +85,61 @@ const OrderDetailPage = () => {
           Điều chỉnh trạng thái quán
         </label>
       </div>
-      <div style={{ height: "1000px" }}>
+      <div style={{ minHeight: "1000px" }}>
         <div className="mt-2">
           <h1 className="text-uppercase">Danh sách đơn hàng</h1>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th className="d-flex justify-content-between">ID</th>
-                <th>Món </th>
-                <th>Trạng thái</th>
-                <th>Số tiền</th>
-                <th>Thời gian</th>
-                <th>Chi tiết</th>
-              </tr>
-            </thead>
-            <tbody>
-              {listOrder &&
-                listOrder?.map((order) => {
-                  return (
-                    <>
-                      <tr>
-                        <td>{order.orderId}</td>
-                        <td>
-                          {order.foodDrinks &&
-                            order.foodDrinks.map((foodDrink, index) => (
-                              <span key={foodDrink.id}>
-                                {foodDrink.name}
-                                {index !== order.foodDrinks.length - 1 && ", "}
-                              </span>
-                            ))}
-                        </td>
-                        <td>
-                          <StatusBadge statusCode={order.statusCode} />
-                        </td>
-                        <td>{getVietNamDongFormat(order.totalAmout)}</td>
-                        <td>{convertUTCtoVietnamTime(order.updatedAt)}</td>
-                        <td>
-                          <button
-                            className="btn btn-info"
-                            onClick={() => {
-                              setOrderDetailModal(true);
-                              setSelectedOrderId(order.orderId);
-                            }}
-                          >
-                            Xem chi tiết
-                          </button>
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
-            </tbody>
-          </Table>
+          <div style={{ minHeight: "1000px" }}>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th className="d-flex justify-content-between">ID</th>
+                  <th>Món </th>
+                  <th>Trạng thái</th>
+                  <th>Số tiền</th>
+                  <th>Thời gian</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                {listOrder &&
+                  listOrder?.map((order) => {
+                    return (
+                      <>
+                        <tr>
+                          <td>{order.orderId}</td>
+                          <td>
+                            {order.foodDrinks &&
+                              order.foodDrinks.map((foodDrink, index) => (
+                                <span key={foodDrink.id}>
+                                  {foodDrink.name}
+                                  {index !== order.foodDrinks.length - 1 &&
+                                    ", "}
+                                </span>
+                              ))}
+                          </td>
+                          <td>
+                            <StatusBadge statusCode={order.statusCode} />
+                          </td>
+                          <td>{getVietNamDongFormat(order.totalAmout)}</td>
+                          <td>{convertUTCtoVietnamTime(order.updatedAt)}</td>
+                          <td>
+                            <button
+                              className="btn btn-info"
+                              onClick={() => {
+                                setOrderDetailModal(true);
+                                setSelectedOrderId(order.orderId);
+                              }}
+                            >
+                              Xem chi tiết
+                            </button>
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  })}
+              </tbody>
+            </Table>
+          </div>
           <ReactPaginate
             breakLabel="..."
             nextLabel="next >"
