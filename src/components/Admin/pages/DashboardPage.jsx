@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { createAxios } from "../../../api/axiosConfig";
 import { loginSuccess } from "../../../redux/authSlice";
 import { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { getVietNamDongFormat } from "../../../utils/func.ulti";
 
 const getYears = (yearNow) => {
   const years = [];
@@ -18,77 +21,128 @@ const DashboardPage = () => {
   const years = getYears(yearNow);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.login.currentUser);
-  const [yearSelected, setYearSelected] = useState(yearNow);
-  const [yearData, setYearData] = useState();
   const [orderCoutByYear, setOrderCountByYear] = useState();
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [orderData, setOrderData] = useState(null);
+  const shopId = user?.shopId;
+  const [dataKeyArray, setDataKeyArray] = useState();
+  const [dataValueArray, setDataValueArray] = useState();
+  const [orderCount, setOrderCount] = useState();
+  const [income, setIncome] = useState();
 
   const axiosJWT = createAxios(user, dispatch, loginSuccess);
-
-  useEffect(() => {
-    statisticsByYear(yearSelected);
-  }, [yearSelected]);
-
-  const statisticsByYear = async (year) => {
+  const fetchData = async () => {
     try {
-      const res = await axiosJWT.get("/order/statisticsByYear/" + year);
-      if (res.data && res.data.metadata) {
-        let yearDataArray = res.data.metadata;
-        const barChartData = Array.from({ length: 12 }, () => 0);
-        yearDataArray.forEach((item) => {
-          const monthIndex = item.order_month - 1;
-          barChartData[monthIndex] = item.total_orders;
-        });
-        setYearData(barChartData);
-
-        const orderCount = barChartData.reduce(
-          (accumulator, currentValue) => accumulator + currentValue,
+      const response = await axiosJWT.get("order/report/" + shopId, {
+        params: {
+          dateStart: new Date(startDate).toLocaleDateString(),
+          dateEnd: new Date(endDate).toLocaleDateString(),
+        },
+      });
+      if (response.data && response.data.metadata) {
+        setOrderData(response.data.metadata);
+        setDataKeyArray(Object.keys(response.data.metadata));
+        const totalOrdersArray = Object.values(response.data.metadata).map(
+          (item) => item.totalOrders
+        );
+        setDataValueArray(totalOrdersArray);
+        const totalOrdersSum = totalOrdersArray.reduce(
+          (acc, curr) => acc + curr,
           0
         );
-        setOrderCountByYear(orderCount);
+        setOrderCount(totalOrdersSum);
+        const totalAmountSum = Object.values(response.data.metadata).reduce(
+          (acc, curr) => acc + curr.totalAmount,
+          0
+        );
+        console.log(totalAmountSum);
+        setIncome(totalAmountSum);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching order data:", error);
     }
   };
 
-  const handleChangeYear = async (year) => {
-    statisticsByYear(year);
+  const handleSubmitDate = async (e) => {
+    e.preventDefault();
+    console.log("Start date:", startDate);
+    console.log("End date:", endDate);
+    // Thực hiện xử lý submit tại đây
+    await fetchData();
   };
 
   return (
     <>
       <div className="my-5" style={{ minHeight: "200px" }}>
         <h1>Thống kê đơn hàng</h1>
-        <select
-          class="form-select"
-          aria-label="Default select example"
-          onChange={(e) => handleChangeYear(e.target.value)}
-        >
-          {years &&
-            years.map((year) => {
-              return (
-                <>
-                  <option value={year}>{year}</option>
-                </>
-              );
-            })}
-        </select>
-        <div class="card mt-3" style={{ width: "18rem" }}>
-          <div class="card-body">
-            <h5 class="card-title">Doanh thu: </h5>
-            <p class="card-text">
-              Tổng {orderCoutByYear ? orderCoutByYear : 0} đơn
-            </p>
+        <form id="date-range-form" onSubmit={handleSubmitDate}>
+          <div className="row">
+            <div className="col-4">
+              <label htmlFor="from">Từ ngày:</label>
+              <DatePicker
+                id="from"
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                dateFormat="dd/MM/yyyy"
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="Chọn ngày bắt đầu"
+                className="form-control"
+              />
+            </div>
+            <div className="col-4">
+              <label htmlFor="to">Đến ngày:</label>
+              <DatePicker
+                id="to"
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                dateFormat="dd/MM/yyyy"
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                placeholderText="Chọn ngày kết thúc"
+                className="form-control"
+              />
+            </div>
+            <div className="col-4">
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+        <div className="row">
+          <div class="card mt-3 col-3 mx-3" style={{ width: "18rem" }}>
+            <div class="card-body fs-2">
+              <h5 class="card-title fs-3">Tổng số đơn: </h5>
+              <p class="card-text">{orderCount ? orderCount : 0} đơn</p>
+            </div>
+          </div>
+          <div class="card mt-3 col-3 mx-3" style={{ width: "18rem" }}>
+            <div class="card-body fs-2">
+              <h5 class="card-title fs-3">Doanh thu: </h5>
+              <p class="card-text">
+                {income ? getVietNamDongFormat(income) : "0 VND"}
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       <div style={{ minHeight: "1000px" }} className="mt-5">
-        {yearData && (
+        {setDataValueArray && (
           <BarChart
-            series={[{ data: yearData ? yearData : [] }]}
+            series={[{ data: dataValueArray ? dataValueArray : [] }]}
             height={700}
-            xAxis={[{ data: MonthsInYearArray, scaleType: "band" }]}
+            xAxis={[
+              {
+                data: dataKeyArray ? dataKeyArray : [],
+                scaleType: "band",
+              },
+            ]}
             margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
           />
         )}
