@@ -15,6 +15,10 @@ import { getShopDetail } from "../../../api/shop.api";
 import ShopOrderDetailModal from "../../Widgets/ShopOrderDetailModal";
 
 const OrderDetailPage = () => {
+  useEffect(() => {
+    document.title = "Quản lý đơn hàng";
+  }, []);
+
   const user = useSelector((state) => state.auth.login.currentUser);
   const dispatch = useDispatch();
   const axiosJWT = createAxios(user, dispatch, loginSuccess);

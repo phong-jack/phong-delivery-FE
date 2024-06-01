@@ -9,6 +9,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getVietNamDongFormat } from "../../../utils/func.ulti";
 
 const getYears = (yearNow) => {
+  useEffect(() => {
+    document.title = "Thống kê";
+  }, []);
+
   const years = [];
   for (let i = yearNow; i >= yearNow - 3; i--) {
     years.push(i);

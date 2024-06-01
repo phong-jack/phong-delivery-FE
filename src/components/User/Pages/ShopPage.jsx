@@ -7,6 +7,10 @@ import { getFoodDrinkByShop } from "../../../api/foodDrink.api";
 import Rating from "react-rating";
 
 const ShopPage = () => {
+  useEffect(() => {
+    document.title = "Cửa hàng";
+  }, []);
+
   const [shopDetail, setShopDetail] = useState({});
   const [menuList, setMenuList] = useState([]);
   const [foodDrinkList, setFoodDrinkList] = useState([]);

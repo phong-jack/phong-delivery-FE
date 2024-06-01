@@ -8,6 +8,10 @@ import { toast } from "react-toastify";
 import ChangePasswordModal from "../ChangePasswordModal";
 
 const ProfilePage = () => {
+  useEffect(() => {
+    document.title = "Thông tin tài khoản";
+  }, []);
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.login.currentUser);
 

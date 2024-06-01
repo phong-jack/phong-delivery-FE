@@ -15,6 +15,10 @@ import { getVietNamDongFormat } from "../../../utils/func.ulti";
 import ModalEditProduct from "../../Widgets/ModalEditProduct";
 
 const ProductPage = () => {
+  useEffect(() => {
+    document.title = "Quản lý món";
+  }, []);
+
   const user = useSelector((state) => state.auth.login.currentUser);
   const dispatch = useDispatch();
   const [isShowConfirmModal, setShowConfirmModal] = useState(false);

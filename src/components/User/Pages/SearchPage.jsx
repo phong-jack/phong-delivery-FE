@@ -5,6 +5,10 @@ import ReactPaginate from "react-paginate";
 import ShopCard from "../ShopCard";
 
 const SearchBox = () => {
+  useEffect(() => {
+    document.title = "Tìm kiếm";
+  }, []);
+
   const navigate = useNavigate();
 
   const [searchInput, setSearchInput] = useState("");

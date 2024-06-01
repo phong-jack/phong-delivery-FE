@@ -8,6 +8,10 @@ import { toast } from "react-toastify";
 import { clearOrder } from "../../../redux/orderSlice";
 
 const SuccessPay = () => {
+  useEffect(() => {
+    document.title = "Thành công";
+  }, []);
+
   let order = useSelector((state) => state.order.currentOrder);
   let user = useSelector((state) => state.auth.login.currentUser);
 

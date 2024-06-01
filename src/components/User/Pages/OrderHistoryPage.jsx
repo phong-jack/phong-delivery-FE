@@ -13,6 +13,10 @@ import {
 import moment from "moment";
 
 const OrderHistoryPage = () => {
+  useEffect(() => {
+    document.title = "Lịch sử đơn hàng";
+  }, []);
+
   const dispatch = useDispatch();
   const [isShowOrderDetailModal, setOrderDetailModal] = useState(false);
   const user = useSelector((state) => state.auth.login.currentUser);

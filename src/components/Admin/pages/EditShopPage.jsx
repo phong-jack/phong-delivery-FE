@@ -5,6 +5,10 @@ import { loginSuccess } from "../../../redux/authSlice";
 import { toast } from "react-toastify";
 
 const EditShopPage = () => {
+  useEffect(() => {
+    document.title = "Thông tin quán";
+  }, []);
+
   const user = useSelector((state) => state.auth.login.currentUser);
   const dispatch = useDispatch();
   const axiosJWT = createAxios(user, dispatch, loginSuccess);
