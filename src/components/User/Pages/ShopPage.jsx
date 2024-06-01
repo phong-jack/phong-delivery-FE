@@ -74,7 +74,10 @@ const ShopPage = () => {
 
       {/* Shop products!! */}
       <>
-        <section className="shop-product-containter mt-5">
+        <section
+          className="shop-product-containter mt-5"
+          style={{ minHeight: "800px" }}
+        >
           <div className="my-3 container ">
             <div className="row">
               <div className="col-lg-3 mb-4">

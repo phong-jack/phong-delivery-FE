@@ -21,6 +21,7 @@ import RegisterModal from "./components/RegisterModal";
 import SearchBox from "./components/User/Pages/SearchPage";
 import SearchPage from "./components/User/Pages/SearchPage";
 import SuccessPay from "./components/User/Pages/SuccessPay";
+import EditShopPage from "./components/Admin/pages/EditShopPage";
 
 function App() {
   const [isShowLoginModal, setShowLoginModal] = useState(false);
@@ -57,6 +58,7 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/product" element={<ProductPage />} />
           <Route path="/admin/order" element={<OrderDetailPage />} />
+          <Route path="/admin/edit-shop" element={<EditShopPage />} />
 
           {/* Page mặc định */}
           <Route path="*" element={<ErrorPage />} />

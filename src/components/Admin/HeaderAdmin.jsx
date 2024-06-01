@@ -74,6 +74,11 @@ const HeaderAdmin = () => {
                         Cập nhật thông tin
                       </Link>
                     </li>
+                    <li>
+                      <Link to="/admin/edit-shop" className="dropdown-item">
+                        Cập nhật quán
+                      </Link>
+                    </li>
 
                     <NavDropdown.Divider />
 
