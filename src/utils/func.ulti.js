@@ -22,3 +22,7 @@ export const sortOrdersByTime = (orders) => {
     moment(a.updatedAt).isAfter(moment(b.updatedAt)) ? -1 : 1
   );
 };
+
+export function roundToKm(distance) {
+  return distance.toFixed(2);
+}

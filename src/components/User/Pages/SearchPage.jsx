@@ -3,11 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { findShopByQuery } from "../../../api/shop.api";
 import ReactPaginate from "react-paginate";
 import ShopCard from "../ShopCard";
+import { useDispatch, useSelector } from "react-redux";
+import { createAxios } from "../../../api/axiosConfig";
+import { loginSuccess } from "../../../redux/authSlice";
 
 const SearchBox = () => {
   useEffect(() => {
     document.title = "Tìm kiếm";
   }, []);
+
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.login.currentUser);
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   const navigate = useNavigate();
 
@@ -17,9 +24,18 @@ const SearchBox = () => {
   const [totalShops, setTotalShops] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  //   useEffect(() => {
-  //     findShops(searchInput, 1);
-  //   }, []);
+  const findShopsByDistance = async () => {
+    try {
+      const res = await axiosJWT.get("/shop/find/by-distance");
+      if (res.data && res.data.metadata) {
+        setTotalShops(res.data.metadata.count);
+        setListShop(res.data.metadata.shops);
+        console.log(res);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //find shop by query
   const findShops = async (query, page) => {
@@ -67,7 +83,14 @@ const SearchBox = () => {
           <i class="fas fa-search"></i>
         </button>
       </div>
-
+      {user && (
+        <button
+          className="btn btn-warning mt-3"
+          onClick={() => findShopsByDistance()}
+        >
+          Gợi ý quán theo khoảng cách
+        </button>
+      )}
       <div>
         <section id="shops-container" className="mt-5 ">
           <div className="container ">
@@ -85,6 +108,7 @@ const SearchBox = () => {
                         address={shop.address}
                         imageUrl={shop.imageUrl}
                         isWorking={shop.isWorking}
+                        distance={shop.distance}
                       />
                     </div>
                   );
