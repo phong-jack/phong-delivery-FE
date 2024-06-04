@@ -205,7 +205,7 @@ const ProfilePage = () => {
                         id="inputBirthday"
                         type="text"
                         name="birthday"
-                        placeholder="Enter your birthday"
+                        placeholder="Nhập vào địa chỉ"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                       />
